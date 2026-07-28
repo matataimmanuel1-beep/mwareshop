@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<<meta name="viewport" content="width=device-width, initial-scale=1.0">
+>
+    <title>Contact Us - Mwareshop</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- GLOBAL NAVIGATION MENU -->
+        <nav style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <a href="/">Shop Storefront</a>
+                <a href="/contact">Contact Us</a>
+            </div>
+            <div>
+                <% if (customer) { %>
+                    <span style="color:white; margin-right:15px;">👤 Hello, <%= customer.name %></span>
+                    <a href="/customer/dashboard" style="margin-right:15px; color:#38bdf8;">My Portal Dashboard</a>
+                    <a href="/customer/logout" style="color:#f87171;">Sign Out</a>
+                <% } else { %>
+                    <a href="/customer/login" style="margin-right:15px;">Customer Login</a>
+                    <a href="/customer/register" style="margin-right:15px;">Register Account</a>
+                    <a href="/admin/login" style="color:#94a3b8;">Admin Entry</a>
+                <% } %>
+            </div>
+        </nav>
+        
+        <h1>Contact Our Support Team</h1>
+        
+        <div style="display: flex; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
+            <!-- BUSINESS INFORMATION CARD -->
+            <div style="flex: 1; min-width: 300px; background: #ffffff; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                <h2>Get In Touch</h2>
+                <p>If you have any questions regarding your orders, stock availability, or payment confirmation handles, please reach out to us using the official channels below.</p>
+                <hr style="border:0; border-top:1px solid #e2e8f0; margin:20px 0;">
+                
+                <p style="font-size: 16px; margin: 15px 0;">
+                    <strong>📧 Support Email:</strong><br>
+                    <a href="mailto:<%= info.email %>" style="color: #2563eb; text-decoration: none;"><%= info.email %></a>
+                </p>
+                
+                <p style="font-size: 16px; margin: 15px 0;">
+                    <strong>📞 Phone Helpline:</strong><br>
+                    <a href="tel:<%= info.phone %>" style="color: #2563eb; text-decoration: none;"><%= info.phone %></a>
+                </p>
+                
+                <p style="font-size: 16px; margin: 15px 0;">
+                    <strong>📍 Physical Address:</strong><br>
+                    <span style="color: #475569;"><%= info.address %></span>
+                </p>
+            </div>
+
+            <!-- PLACEHOLDER CONTACT FORM FOR CLIENTS -->
+            <div style="flex: 1; min-width: 300px;">
+                <h2>Send Us a Message</h2>
+                <form onsubmit="alert('Thank you for reaching out! We will get back to you shortly.'); this.reset(); return false;" style="max-width: 100%; margin: 0;">
+                    <label style="font-weight: 600;">Your Name:</label>
+                    <input type="text" placeholder="e.g. John Doe" required>
+                    
+                    <label style="font-weight: 600;">Email Address:</label>
+                    <input type="email" placeholder="e.g. john@example.com" required>
+                    
+                    <label style="font-weight: 600;">Message Topic:</label>
+                    <textarea placeholder="Write your inquiry or comment here..." rows="5" required></textarea>
+                    
+                    <button type="submit" style="background-color: #2563eb;">Submit Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<<meta name="viewport" content="width=device-width, initial-scale=1.0">
+><title>Customer Login</title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+    <div class="container" style="max-width:400px; margin-top:50px;">
+        <h2>Customer Portal Login</h2>
+        <% if(error){ %><p style="color:red;"><%= error %></p><% } %>
+        <!-- FIXED ACTION PATH BELOW -->
+        <form action="/customer/login" id="cForm" method="POST" style="max-width:100%;">
+            <label>Email Address</label><input type="email" name="email" required>
+            <label>Password</label><input type="password" id="cPass" name="password" required>
+            <input type="checkbox" onclick="document.getElementById('cPass').type=this.checked?'text':'password'"> Show Password<br><br>
+            <button type="submit">Log In</button>
+        </form>
+        <p><a href="/customer/register">Need an account? Register Here</a></p>
+    </div>
+</body>
+</html>
+

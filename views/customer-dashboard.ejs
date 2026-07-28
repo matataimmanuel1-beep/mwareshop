@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<<meta name="viewport" content="width=device-width, initial-scale=1.0">
+><title>Customer Portal</title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+    <div class="container">
+        <h1>Customer Tracking Portal</h1>
+        <nav><a href="/">Back to Storefront</a> | <a href="/customer/logout" style="color:#f87171;">Sign Out Account</a></nav>
+        
+        <h2>📦 Order History Status Tracking</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order Ref ID</th>
+                    <th>Products Ordered</th>
+                    <th>Grand Price Total</th>
+                    <th>Current Order Status</th>
+                    <th>Delivery Receipt Check</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td>#<%= order.id %></td>
+                        <td><%= order.items_summary %></td>
+                        <td><strong><%= info.currency %><%= order.total_price.toFixed(2) %></strong></td>
+                        <td>
+                            <span style="font-weight:bold; color: <%= order.status==='Pending'?'#eab308': order.status==='Confirmed (Sold)'?'#2563eb':'#10b981' %>">
+                                <%= order.status %>
+                            </span>
+                        </td>
+                        <td>
+                            <% if (order.status === 'Confirmed (Sold)') { %>
+                                <form action="/customer/confirm-receipt/<%= order.id %>" method="POST" style="padding:0; border:none; margin:0;">
+                                    <button type="submit" style="background:#10b981; padding:5px 10px; width:auto; font-size:12px;">👍 Confirm I Received This</button>
+                                </form>
+                            <% } else if (order.status === 'Pending') { %>
+                                <span style="color:#64748b; font-size:13px;">Awaiting Shop Shipment</span>
+                            <% } else { %>
+                                <span style="color:#10b981; font-weight:bold;">✨ Order Completed</span>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+

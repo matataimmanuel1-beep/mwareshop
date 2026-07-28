@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<<meta name="viewport" content="width=device-width, initial-scale=1.0">
+><title>Admin Login</title><link rel="stylesheet" href="/css/style.css"></head>
+<body>
+    <div class="container" style="max-width:400px; margin-top:50px;">
+        <h2>Mwareshop Administrative Access</h2>
+        <form action="/admin/login" method="POST" style="max-width:100%;">
+            <label>Administrative Password Key:</label>
+            <input type="password" id="aPass" name="password" required><br>
+            <input type="checkbox" onclick="document.getElementById('aPass').type=this.checked?'text':'password'"> Show Secret Key<br><br>
+            <button type="submit" style="background-color:#1e293b;">Authorize Login</button>
+        </form>
+        <p><a href="/">← Return to Storefront</a></p>
+    </div>
+</body>
+</html>
+

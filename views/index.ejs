@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mwareshop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- GLOBAL NAVIGATION MENU -->
+        <nav style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <a href="/">Shop Storefront</a> | 
+                <a href="/contact">Contact Us</a>
+            </div>
+            <div>
+                <% if (customer) { %>
+                    <span style="color:white; margin-right:15px;">👤 <%= customer.name %></span>
+                    <a href="/customer/dashboard" style="color:#38bdf8;">Dashboard</a>
+                    <a href="/customer/logout" style="color:#f87171;">Sign Out</a>
+                <% } else { %>
+                    <a href="/customer/login">Login</a> | 
+                    <a href="/customer/register">Register</a> | 
+                    <a href="/admin/login" style="color:#94a3b8;">Admin</a>
+                <% } %>
+            </div>
+        </nav>
+        
+        <h1>Welcome to Mwareshop</h1>
+
+        <!-- SYSTEM NOTIFICATION ALERT TOGGLE TAB -->
+        <div id="notifyTab" style="background:#eff6ff; border:1px solid #bfdbfe; padding:12px; border-radius:8px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13px; color:#1e3a8a;">Allow alerts to get instant notifications when your order status updates.</span>
+            <button id="enableNotifyBtn" onclick="requestNotificationAccess()" style="width:auto; background:#2563eb; padding:6px 14px; font-size:13px; margin:0;">Enable Alerts</button>
+        </div>
+        
+        <!-- SHOPPING CART MODULE -->
+        <div style="background:#fff; border:1px solid #e2e8f0; padding:20px; border-radius:8px; margin-bottom:30px;">
+            <h2>🛒 Shopping Cart (<%= cart.reduce((total, item) => total + item.qty, 0) %> items)</h2>
+            <% if(cart.length === 0) { %>
+                <p>Your cart is empty.</p>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% cart.forEach(item => { %>
+                            <tr>
+                                <td><strong><%= item.title %></strong></td>
+                                <td><%= info.currency %><%= item.price.toFixed(2) %></td>
+                                <td>x <%= item.qty %></td>
+                                <td><%= info.currency %><%= (item.price * item.qty).toFixed(2) %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <p><strong>Grand Total: <%= info.currency %><%= cart.reduce((sum, item) => sum + (item.price * item.qty), 0).toFixed(2) %></strong></p>
+                <a href="/cart/clear" style="color:#ef4444; font-weight:600; text-decoration:none;">🗑️ Clear Cart</a>
+                <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
+                <% if (customer) { %>
+                    <form action="/order/checkout" method="POST" style="padding:0; border:none; max-width:100%;">
+                        <button type="submit" style="background:#10b981;">Place Order</button>
+                    </form>
+                <% } else { %>
+                    <p style="color:#ef4444; font-weight:bold;">⚠️ You must <a href="/customer/login">Login</a> to checkout.</p>
+                <% } %>
+            <% } %>
+        </div>
+
+        <!-- PRODUCTS HIGH-DENSITY GRID -->
+        <div class="product-grid">
+            <% products.forEach(product => { %>
+                <div class="product-card">
+                    <div>
+                        <% if(product.image) { %><img src="<%= product.image %>"><% } %>
+                        <h3><%= product.title %></h3>
+                        <p><%= product.description %></p>
+                    </div>
+                    <div>
+                        <span class="product-price"><%= info.currency %><%= product.price %></span>
+                        <p>Status: <%= product.in_stock === 1 ? '🟢 In Stock' : '🔴 Out of Stock' %></p>
+                        <% if(product.in_stock === 1) { %>
+                            <form action="/cart/add" method="POST" style="padding:0; border:0; margin:0; max-width:100%; display:flex; gap:10px;">
+                                <input type="hidden" name="product_id" value="<%= product.id %>">
+                                <input type="number" name="quantity" value="1" min="1" style="width:60px; margin:0; padding:5px; text-align:center;">
+                                <button type="submit" style="padding:5px;">🛒 Add</button>
+                            </form>
+                        <% } else { %>
+                            <button disabled style="background:#cbd5e1;">Out of Stock</button>
+                        <% } %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </div>
+
+    <!-- WEB NOTIFICATION ENGINE -->
+    <script>
+        if ('serviceWorker' in navigator && 'Notification' in window) {
+            navigator.serviceWorker.register('/sw.js').then(function() { checkNotificationState(); });
+        } else { 
+            document.getElementById('notifyTab').style.display = 'none'; 
+        }
+
+        function checkNotificationState() {
+            if (Notification.permission === 'granted') { 
+                document.getElementById('notifyTab').style.display = 'none'; 
+            } else if (Notification.permission === 'denied') { 
+                document.getElementById('enableNotifyBtn').innerText = 'Blocked'; 
+                document.getElementById('enableNotifyBtn').disabled = true; 
+                document.getElementById('enableNotifyBtn').style.background = '#cbd5e1';
+            }
+        }
+
+        function requestNotificationAccess() {
+            Notification.requestPermission().then(function(permission) {
+                if (permission === 'granted') {
+                    navigator.serviceWorker.ready.then(function(reg) { 
+                        reg.showNotification('Mwareshop Active!', { 
+                            body: 'You will receive order handshake alerts here.',
+                            vibrate: [200, 100, 200]
+                        }); 
+                    });
+                    document.getElementById('notifyTab').style.display = 'none';
+                } else { 
+                    checkNotificationState(); 
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
