@@ -12,12 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "better-sqlite3": "^13.0.2",
     "ejs": "^6.0.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "multer": "^2.2.0",
-    "qrcode": "^1.5.4",
-    "sqlite3": "^6.0.1"
+    "qrcode": "^1.5.4"
   },
   "engines": {
     "node": "20.x"
